@@ -159,54 +159,6 @@ for osc_ind = 1:num_oscillators_NC9
     end
 end
 
-% n_osc   = num_oscillators_NC9;
-% idx1    = (0:n_osc-1)*4 + 1;   % founder theta columns
-% idx2    = idx1 + 1;            % first-daughter theta columns
-% rhs     = @(t,y) odefun_cell_cycle_oscillotile(t, y, ...
-%     sorted_cell_output_NC_9_10_11_gp, kappa_von_mises, muval_von_mises, ...
-%     k_time, pct_cutoff, Diffuse, sorted_cell_output_NC_9_10_11, non_lattice_pos);
-% options_chosen = odeset('MaxStep', tp_step, ...
-%     'Events', @(t,y) switch_events(t, y, idx1, idx2));
-% 
-% t_val = (0:tp_step:total_time)';
-% y_val = zeros(numel(t_val), numel(system_state));
-% y_val(1,:) = system_state;
-% t0 = 0;
-% y0 = system_state(:);
-% 
-% while t0 < t_val(end)
-%     tspan = [t0; t_val(t_val > t0)];
-%     if numel(tspan) == 2
-%         % a 2-element tspan makes ode45 return every internal step; add a dummy midpoint
-%         tspan = [t0; (t0 + tspan(2))/2; tspan(2)];
-%     end
-% 
-%     [t_seg, y_seg, te, ye, ie] = ode45(rhs, tspan, y0, options_chosen);
-% 
-%     % copy rows that land on the output grid (ode45 returns tspan values exactly)
-%     [on_grid, loc] = ismember(t_seg, t_val);
-%     y_val(loc(on_grid),:) = y_seg(on_grid,:);
-% 
-%     if isempty(ie)
-%         break
-%     end
-% 
-%     % restart just past every switch that fired at the stopping time
-%     y0    = ye(end,:)';
-%     fired = ie(te == te(end));
-%     for k = fired(:)'
-%         if k <= n_osc
-%             col = idx1(k);         thr = 2*pi;   % osc 2 switches on
-%         elseif k <= 2*n_osc
-%             col = idx1(k-n_osc);   thr = 4*pi;   % osc 3 switches on
-%         else
-%             col = idx2(k-2*n_osc); thr = 4*pi;   % osc 4 switches on
-%         end
-%         y0(col) = max(y0(col), thr + 1e-9);      % land strictly past threshold
-%     end
-%     t0 = te(end);
-% end
-
 options_chosen = ...
     odeset('MaxStep',tp_step,'Stats','on');
 [t_val,y_val] = ode45(@(t,y)odefun_cell_cycle_oscillotile(t, y, ...
@@ -240,10 +192,3 @@ if all_ok
 end
 
 end
-
-% function [value, isterminal, direction] = switch_events(~, y, idx1, idx2)
-% % Zero when a parent oscillator crosses the phase that switches on a daughter.
-% value      = [y(idx1) - 2*pi; y(idx1) - 4*pi; y(idx2) - 4*pi];
-% isterminal = ones(size(value));
-% direction  = ones(size(value));   % upward crossings only
-% end

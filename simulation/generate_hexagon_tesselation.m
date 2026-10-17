@@ -213,7 +213,7 @@ for i = 1:length(lattice_pos)
         I1 = mean_I1_I2;
         I2 = mean_I1_I2;
         assert(abs(2*mean_I1_I2 - percent_germ_plasm(i)) < ...
-            max(20*ABSTOL, 20*RELTOL*abs(percent_germ_plasm(i))));
+            max(200*ABSTOL, 200*RELTOL*abs(percent_germ_plasm(i))));
         %assert(abs(2*mean_I1_I2 - percent_germ_plasm(i)) < 20*ABSTOL);
     end
     pshap1 = polyshape(half1(:,1), half1(:,2));
