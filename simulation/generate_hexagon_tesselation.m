@@ -20,7 +20,6 @@ function [ lattice_pos, pairs, percent_germ_plasm, percent_germ_plasm_half, ...
 %% INPUTS: 
 
 % sigma = 1 (see below)
-
 % A = 1 / 2 / pi / sigma^2 % Gaussian amplitude
 % rnd_mag = 1/4 of sigma
 % rnd_angle = pi/2
@@ -53,8 +52,6 @@ function [ lattice_pos, pairs, percent_germ_plasm, percent_germ_plasm_half, ...
 % NOTE (for below):
 % dist_cut is actually a number of nuclei to keep
 % integrate_gaussian_polygon does not generalize well to really large polygons (well outside of parameter range of interest)
-% check each integral step by sampling! -- just checked (see commented asserts)
-
 
 %%
 
@@ -253,7 +250,6 @@ for i = 1:length(lattice_pos)
 end
 
 % distance from center of gaussian... to NC 9 nucleus
-%mean_dist_check = zeros(size(mean_points, 1));
 mean_dist_check = zeros(size(mean_points, 1), 1);
 for iii = 1:size(pairs,1)
     mean_dist_check(iii) = norm(mean_points(iii,:));
@@ -265,10 +261,6 @@ end
 % store which to keep based on distance of NC 9 nucleus from center.
 for iii = 1:min(dist_cut, numel(sort_III))
     above_thresh_pairs_dist_cutoff(sort_III(iii)) = 1;
-
-    % if (above_thresh_pairs(sort_III(iii)))
-    %     assert(above_thresh_pairs_dist_cutoff(sort_III(iii)))
-    % end
 end
 
 % store the positions of nuclei at 9, 10, 11 for each clone.
@@ -309,15 +301,6 @@ for i = 1:size(pairs,1)
             [half1, half2] = clip_polygon_by_line(verts, ...
                 lattice_pos(pairs(i,j),:), random_div_angle(pairs(i,j)));
 
-            % % store centroid and germ plasm for first half
-            % I1     = integrate_gaussian_polygon(A, mu, sigma, half1, ABSTOL, RELTOL);
-            % % store centroid and germ plasm for second half
-            % I2     = integrate_gaussian_polygon(A, mu, sigma, half2, ABSTOL, RELTOL);
-            % if (NC11_flag == 4)
-            %     mean_I1_I2 = mean([I1, I2]);
-            %     I1 = mean_I1_I2;
-            %     I2 = mean_I1_I2;
-            % end
             I1 = percent_germ_plasm_half(pairs(i,j), 1);
             I2 = percent_germ_plasm_half(pairs(i,j), 2);
             pshap1 = polyshape(half1(:,1), half1(:,2));
@@ -415,15 +398,6 @@ if (plot_NC9)
 
     storestore_pos = [];
     storestore_pos = vertcat(storestore_pos, mean_points(find(above_thresh_pairs & above_thresh_pairs_dist_cutoff),:));
-    % calculate delaunay triangulation based on storestore_pos
-    DTTT = delaunayTriangulation(storestore_pos(:,1),storestore_pos(:,2));
-    % Get all edges
-    %edg = edges(DTTT);
-    % % Get convex hull vertex indices
-    % hull_idx = unique(convexHull(DTTT));
-    % is_boundary = ismember(edg(:,1), hull_idx) & ismember(edg(:,2), hull_idx);
-    % interior_edges = edg(~is_boundary, :);
-    %hold all; triplot(DTTT);
 
     gp_calc = gp_calc / sum(gp_calc);
 
@@ -469,16 +443,6 @@ if (plot_NC10)
     storestore_pos = [];
     storestore_pos = vertcat(storestore_pos, lattice_pos(pairs(find(above_thresh_pairs & above_thresh_pairs_dist_cutoff),1),:));
     storestore_pos = vertcat(storestore_pos, lattice_pos(pairs(find(above_thresh_pairs & above_thresh_pairs_dist_cutoff),2),:));
-
-    % calculate delaunay triangulation based on storestore_pos
-    DTTT = delaunayTriangulation(storestore_pos(:,1),storestore_pos(:,2));
-    % Get all edges
-    %edg = edges(DTTT);
-    % % Get convex hull vertex indices
-    % hull_idx = unique(convexHull(DTTT));
-    % is_boundary = ismember(edg(:,1), hull_idx) & ismember(edg(:,2), hull_idx);
-    % interior_edges = edg(~is_boundary, :);
-    %hold all; triplot(DTTT);
 
     gp_calc = [];
     color_vect_vect = [];
@@ -551,13 +515,6 @@ if (plot_NC11)
 
     end
 
-    [vMGFPoints, vMGFcells] = voronoin(lattice_pos);
-    % should I plot
-    if (should_i_plot)
-        for vcell = 1:length(lattice_pos)
-            %patch(vMGFPoints(vMGFcells{vcell},1),vMGFPoints(vMGFcells{vcell},2), 'w','FaceAlpha',0.2,'EdgeColor','w');
-        end
-    end
 
     gp_calc = [];
     color_vect_vect = [];
@@ -619,22 +576,6 @@ for vcell = 1:size(pairs,1)
         assert(~any(is_boundary(pairs(vcell,:))), 'Kept clone touches lattice boundary');
     end
 end
-
-
-% % check that none of the points sit on the convex hull.
-% kkk = convhull(lattice_pos(:,1),lattice_pos(:,2));
-% conv_hull_pts = lattice_pos(kkk,:);
-% % check whether any of the points belong to convex hull.
-% % loop through all points -- check whether overlap exists.
-% is_Overlap = false;
-% 
-% for vcell = 1:size(cell_output_NC_9_10_11, 1)
-%     this_other_other_vect = cell_output_NC_9_10_11{vcell,2};
-% 
-%     CCCCC = intersect(this_other_other_vect,conv_hull_pts,'rows');
-%     is_Overlap = is_Overlap || (~isempty(CCCCC));   
-% end
-% assert(~is_Overlap)
 
 
 end
@@ -795,65 +736,8 @@ function I = signed_triangle_integral(A, mu, sigma, P0, P1, P2, abstol, reltol)
                           'AbsTol', abstol, 'RelTol', reltol);
 end
 
-% function I = signed_triangle_integral(A, mu, sigma, P0, P1, P2, abstol, reltol)
-% % Signed Gaussian integral over triangle (P0,P1,P2) via adaptive quadrature.
-%     e1 = P1-P0;  e2 = P2-P0;
-%     J  = e1(1)*e2(2) - e1(2)*e2(1);   % signed cross product
-%     if abs(J) < 1e-14, I = 0; return; end
-% 
-%     d    = P0 - mu;
-%     s2   = 2*sigma^2;
-%     de1  = dot(d,e1);   de2  = dot(d,e2);
-%     e1e1 = dot(e1,e1);  e1e2 = dot(e1,e2);  e2e2 = dot(e2,e2);
-% 
-%     % Factor out constant exponential for numerical conditioning.
-%     cf = A * J * exp(-dot(d,d)/s2);
-% 
-%     % Early exit: triangle is negligibly far from Gaussian peak.
-%     % if abs(cf) < abstol * 1e-3, I = 0; return; end
-%     rmax = max([norm(e1), norm(e2)]);          % triangle lies in ball of radius rmax about P0
-%     dmin = max(0, norm(d) - rmax);
-%     if A*abs(J)/2 * exp(-dmin^2/s2) < abstol*1e-3, I = 0; return; end
-% 
-%     f = @(s,t) exp(-(2*s.*de1 + 2*t.*de2 + s.^2*e1e1 + ...
-%                      2*s.*t*e1e2 + t.^2*e2e2) / s2);
-% 
-%     inner = @(s) arrayfun(@(si) ...
-%         integral(@(t) f(si,t), 0, 1-si, 'AbsTol', abstol, 'RelTol', reltol), s);
-%     I = cf * integral(inner, 0, 1, 'ArrayValued', true, ...
-%                       'AbsTol', abstol, 'RelTol', reltol);
-% end
-
 function [vx, vy] = hexagon_vertices(R, c, phi)
     angles = phi + (0:5)*pi/3;
     vx = c(1) + R*cos(angles);
     vy = c(2) + R*sin(angles);
 end
-
-
-% function [I_mc, I_std] = MC_integrate(verts, sigma, mu, A)
-% 
-% N     = 5e7; 
-% %% --- Monte Carlo integration ---
-% % Sample uniformly over the bounding box of the polygon
-% x_lo = min(verts(:,1));  x_hi = max(verts(:,1));
-% y_lo = min(verts(:,2));  y_hi = max(verts(:,2));
-% 
-% x_mc = x_lo + (x_hi - x_lo) * rand(N, 1);
-% y_mc = y_lo + (y_hi - y_lo) * rand(N, 1);
-% 
-% % Test which samples fall inside the polygon
-% in_poly = inpolygon(x_mc, y_mc, verts(:,1), verts(:,2));
-% 
-% % Evaluate Gaussian at each sample
-% f_vals = A * exp(-((x_mc - mu(1)).^2 + (y_mc - mu(2)).^2) / (2*sigma^2));
-% 
-% % Monte Carlo estimate: area of box * mean of integrand inside polygon
-% A_box = (x_hi - x_lo) * (y_hi - y_lo);
-% I_mc  = A_box * mean(f_vals .* in_poly);
-% 
-% % Standard error estimate
-% integrand = f_vals .* in_poly;
-% I_std = A_box * std(integrand) / sqrt(N);
-% 
-% end
