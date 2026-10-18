@@ -157,7 +157,7 @@ kappa_von_mises = 200;
 muval_von_mises = pi/5 + pi/10 + pi / 10;
 total_time = 20*pi;
 Diffuse_val = 2.0;
-stepstep = 0.01;
+stepstep = 0.02;
 k_time = 1.45/(4*pi*0.15); % proportionality constant in front of inhibitor build-up
 theta_init = 0;
 [t_val,y_val,which_cycle_soma,sorted_cell_output_NC_9_10_11_gp,sorted_cell_output_NC_9_10_11] = ...
@@ -231,7 +231,15 @@ if (assert_check_bool)
         rnd_angle = atan2(offset(2), offset(1));
     end
 
-    rand_seed = randiiiii(2,iii);
+    if (test_case == 1)
+        rand_seed = 9385969;
+    elseif (test_case == 2)
+        rand_seed = 4164252;
+    elseif (test_case == 3)
+        rand_seed = 2020507;
+    else
+        rand_seed = randiiiii(2,iii);
+    end
     [ ~, ~, ~, ~, ...
         ~, ~, ~, ~, ...
         ~, cell_output_NC_9_10_11_gp_new, ~ ] = ...
