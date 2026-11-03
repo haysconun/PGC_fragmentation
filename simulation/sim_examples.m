@@ -157,7 +157,7 @@ kappa_von_mises = 200;
 muval_von_mises = pi/5 + pi/10 + pi / 10;
 total_time = 20*pi;
 Diffuse_val = 2.0;
-stepstep = 0.02;
+stepstep = 0.01;
 k_time = 1.45/(4*pi*0.15); % proportionality constant in front of inhibitor build-up
 theta_init = 0;
 [t_val,y_val,which_cycle_soma,sorted_cell_output_NC_9_10_11_gp,sorted_cell_output_NC_9_10_11] = ...
@@ -165,7 +165,7 @@ theta_init = 0;
     cell_output_NC_9_10_11_gp, kappa_von_mises, muval_von_mises, ...
     k_time, theta_init, total_time, pct_cutoff, Diffuse_val, non_lattice, stepstep);
 
-plot_at_end = 1==1;
+plot_at_end = 1==0;
 [div_counter, store_index, which_above, which_osc_ind_vect, gp_vect, extra_div_counter] = ...
     plot_cycle_traces(sorted_cell_output_NC_9_10_11_gp,color_vect,...
     t_val,y_val, plot_at_end, pct_cutoff, assert_check_bool);
