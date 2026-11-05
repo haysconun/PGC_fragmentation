@@ -5,22 +5,24 @@ function [randiiiii, div_asymm_NC9_10, div_asymm_NC10_11, cv_plasm, real_bud_cou
 % and computes some statistics about them
 % NOTE: this never compute solutions of the growing ODE.
 
-% OUTPUTS:
-% randiiiii
-% div_asymm_NC9_10
-% div_asymm_NC10_11
-% cv_plasm
-% real_bud_counter_cat
-% NC9_count
+%% OUTPUTS:
+% randiiiii: seeds for generating random displacement and random division orientations
+% div_asymm_NC9_10: estimates of normalized division asymmetries (from NC 9 into NC 10)
+% div_asymm_NC10_11: estimates of normalized division asymmetries (from NC 9 into NC 11)
+% cv_plasm: estimates of coefficient of variation of germ plasm distribution per PGC at NC 11
+% real_bud_counter_cat: count number of PGCs at NC 11 (according to germ plasm threshold)
+% NC9_count: count of number of nuclei contributing to PGCs (at least one PGC progeny)
 
-% INPUTS:
-% A
-% a_val
-% num_points_pm
-% dist_cut
-% pct_cutoff
-% NC11_flag
-% num_realizations
+%% INPUTS:
+% A: amplitude of germ plasm gradient
+% a_val: ratio of inter-bud spacing to the length scale associated with the germ plasm gradient
+% num_points_pm: number of initial points to include in grid for computing tesselation
+%   (several points will be discarded for being too far from germ plasm peak)
+% dist_cut: of the total number of seeds used for tesselation, only those
+%   closest to the gradient's peak are included -- this number kept is set by this
+% pct_cutoff: cutoff for cellularization at NC 11
+% NC11_flag: which division orientation rule for the division of buds (typically 1)
+% num_realizations: how many independent realizations of tesselation to sample
 
 % A = 1 / 2 / pi
 % a_val = 1.1
@@ -29,6 +31,8 @@ function [randiiiii, div_asymm_NC9_10, div_asymm_NC10_11, cv_plasm, real_bud_cou
 % pct_cutoff = 0.015
 % NC11_flag = 1
 % num_realizations = 5
+
+%%
 
 % DO NOT PLOT -- this would quickly become a nuisance
 plot_NC9 = false;
