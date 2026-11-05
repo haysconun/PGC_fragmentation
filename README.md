@@ -26,7 +26,7 @@ It is indexed and sorted as `cell_output_NC_9_10_11_gp` is.
 
 `odefun_cell_cycle_oscillotile` computes the time derivative of the inhibitory protein concentration and of the cycle phase.
 In this function, we specified excess dynamical variables associated with each NC 9 nucleus.
-The dynamics of these excess variables are sequentially activated upon crossings of 2 pi.
+The dynamics of these excess variables are sequentially activated upon crossings of multiples of 2 pi.
 
 ### `solve_embryonic_cell_cycle_oscillator_varying_updated`
 
