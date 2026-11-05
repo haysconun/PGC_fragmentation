@@ -58,7 +58,7 @@ It calls `generate_hexagon_tesselation` but does not explicitely solve the growi
 
 ## Example lineages
 
-The `.mat` files in the `examplelineage` directory are lineage trees that appear either in main figures or supplementary figures. Wild-type and 0.5x *oskar* embryos are in the `wildtype` and `mutant` directories, respectively.
+The `.mat` files in the `examplelineage` directory are lineage forests that appear either in main figures or supplementary figures. Wild-type and 0.5x *oskar* embryos are in the `wildtype` and `mutant` directories, respectively.
 
 | Directory | Contents |
 | --- | --- |
