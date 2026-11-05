@@ -29,3 +29,5 @@ It calls generate_hexagon_tesselation but does not explicitely solve the growing
 distinguishable_colors is a helper function that generates a fixed number of distinguishable colors.
 
 plotting_functions/plot_cycle_traces plots dynamics of cycle phases and checks for the number of cycles completed after NC 11.
+
+The .mat files in the 'examplelineage' directory are lineage trees that appear either in main figures or supplementary figures. Wild-type and 0.5x oskar embryos are in the 'wildtype' and 'mutant' directories, respectively.
