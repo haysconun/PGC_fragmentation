@@ -2,27 +2,27 @@ function [t_val,y_val,which_cycle_soma,sorted_cell_output_NC_9_10_11_gp,sorted_c
     solve_embryonic_cell_cycle_oscillator_varying_updated(cell_output_NC_9_10_11, ...
     cell_output_NC_9_10_11_gp, kappa_von_mises, muval_von_mises, ...
     k_time, theta_init, total_time, pct_cutoff, Diffuse, non_lattice_pos, tp_step)
-% NOTE: check Phase reversal
 
 %% outputs:
-% t_val
-% y_val
-% which_cycle_soma
-% sorted_cell_output_NC_9_10_11_gp
-% sorted_cell_output_NC_9_10_11
+% t_val: time points in simulation output
+% y_val: phases and inhibitor concentrations (see odefun_cell_cycle_oscillotile)
+% which_cycle_soma: store which oscillator are above germ plasm threshold at NC 11
+% sorted_cell_output_NC_9_10_11_gp: (sorted) cell array for storing germ plasm amount over lineages
+% sorted_cell_output_NC_9_10_11: (sorted) cell array for storing positions over lineages
 
 %% inputs:
-% cell_output_NC_9_10_11
-% cell_output_NC_9_10_11_gp
-% kappa_von_mises
-% muval_von_mises
-% k_time
-% theta_init
-% total_time
-% pct_cutoff
-% Diffuse
-% non_lattice_pos
-% tp_step
+% cell_output_NC_9_10_11: output of generate_hexagon_tesselation (positions)
+% cell_output_NC_9_10_11_gp: output of generate_hexagon_tesselation (germ plasm amount)
+% kappa_von_mises: determines width of inhibition peak in f(theta)
+% muval_von_mises: determines position of inhibition peak in f(theta)
+% k_time: scales rate at which inhibitory protein accumulates
+% theta_init: sets initial phase of all oscillators
+% total_time: total simulation time
+% pct_cutoff: cutoff for cellularization at NC 11 (in terms of germ plasm amount)
+% Diffuse: diffusion coefficient
+% non_lattice_pos: lattice positions around main lattice points 
+%   (used for excluding edge bonds in triangulation)
+% tp_step: step for simulation
 
 
 %% sort vectors
@@ -160,7 +160,7 @@ for osc_ind = 1:num_oscillators_NC9
 end
 
 options_chosen = ...
-    odeset('MaxStep',tp_step,'RelTol', 1e-6, 'Stats','on');
+    odeset('MaxStep',tp_step,'RelTol', 1e-8, 'Stats','on');
 [t_val,y_val] = ode45(@(t,y)odefun_cell_cycle_oscillotile(t, y, ...
     sorted_cell_output_NC_9_10_11_gp, kappa_von_mises, muval_von_mises, ...
     k_time, pct_cutoff, Diffuse, sorted_cell_output_NC_9_10_11, non_lattice_pos), ...
