@@ -13,8 +13,10 @@ function [ dydt ] = odefun_cell_cycle_oscillotile(t, y, cell_output_NC_9_10_11_g
 % muval_von_mises: parameter of non-linear function f(theta) -- cell cycle phase at which inhibition occurs
 % k_time: prefactor for growth of inhibitor dependent on mRNA
 % pct_cutoff: cutoff for half-bud cellularization
-% DOCUMENT: Diffuse, sorted_cell_output_NC_9_10_11
-% non_lattice_pos: if isempty, globally coupled
+% Diffuse: diffusion coefficient (for inhibitory protein)
+% positions of nuclei, then cells: sorted_cell_output_NC_9_10_11
+% non_lattice_pos: lattice positions outside of main central lattice points
+%   used for removing edge bonds from triangulation
 
 % NOTE: assumes that sorted_cell_output_NC_9_10_11 and
 % cell_output_NC_9_10_11_gp are sorted/ordered in the same way
