@@ -2,27 +2,28 @@ function [total_cell_count, t_val, y_val, which_cycle_soma, ...
     sorted_cell_output_NC_9_10_11_gp, sorted_cell_output_NC_9_10_11, ...
     div_counter, extra_div_counter, store_index, which_above, which_osc_ind_vect, ...
     gp_vect, cv_9, cv_10, cv_11, cv_14, real_NC9_counter, real_NC10_counter, ...
-    real_bud_counter] = sim_examples(iii, randiiiii, color_vect, assert_check_bool, NC11flag, test_case)
+    real_bud_counter, which_div_check, cat_gp_check] = ...
+    sim_examples(iii, randiiiii, color_vect, assert_check_bool, NC11flag, test_case)
 %% OUTPUTS:
-% total_cell_count
-% t_val
-% y_val
-% which_cycle_soma
-% sorted_cell_output_NC_9_10_11_gp
-% sorted_cell_output_NC_9_10_11
-% div_counter
-% extra_div_counter
-% store_index
-% which_above
-% which_osc_ind_vect
-% gp_vect
-% cv_9
-% cv_10
-% cv_11
-% cv_14
-% real_NC9_counter
-% real_NC10_counter
-% real_bud_counter
+% total_cell_count: final count of cells at NC 14
+% t_val: time points in simulation output
+% y_val: phases and inhibitor concentrations (see odefun_cell_cycle_oscillotile)
+% which_cycle_soma: store which oscillator are above germ plasm threshold at NC 11
+% sorted_cell_output_NC_9_10_11_gp: (sorted) cell array for storing germ plasm amount over lineages
+% sorted_cell_output_NC_9_10_11: (sorted) cell array for storing positions over lineages
+% div_counter: count number of PGCs that divide once after NC 11
+% extra_div_counter: count number of PGCs that divide twice after NC 11
+% store_index: store index for dividing PGCs
+% which_osc_ind_vect: stores indices for clones that generate at least one PGC
+% gp_vect: distribution of germ plasm per PGC at NC 14
+% cv_9: coefficient of variation of germ plasm per clone at NC 9
+% cv_10: coefficient of variation of germ plasm per bud at NC 10
+% cv_11: coefficient of variation of germ plasm per PGC at NC 11
+% cv_14: coefficient of variation of germ plasm per PGC at NC 14
+% real_NC9_counter: number of nuclei from NC 9 that generate at least one PGC in lineage
+% real_NC10_counter: number of buds from NC 10 that generate at least one PGC
+% real_bud_counter: number of PGCs at NC 11
+% which_div_check, cat_gp_check: stores which PGCs divide and their amount of germ plasm before division
 
 %% INPUTS:
 % iii
@@ -30,6 +31,19 @@ function [total_cell_count, t_val, y_val, which_cycle_soma, ...
 % color_vect
 % assert_check_bool
 % NC11flag
+
+% yellow_color = '#5471b7';
+% green_color = '#f0be6e';
+% brown_color = '#f17098';
+% blue_color = '#009395';
+% gray_color = '#5fb4d8';
+% orange_color = '#74c48a';
+% color_vect = [gray_color;...
+% yellow_color;...
+% blue_color;...
+% orange_color;...
+% green_color;...
+% brown_color];
 
 % test_case = 1 -> fig. 6 example 1
 
@@ -185,6 +199,8 @@ end
 
 % initialize cv_14 so that it has value even if assert_check_bool==false
 cv_14 = 0;
+which_div_check = [];
+cat_gp_check = [];
 if (assert_check_bool)
     vertcat_gp = [];
     for iiij = 1:size(sorted_cell_output_NC_9_10_11_gp,1)
@@ -272,8 +288,14 @@ if (assert_check_bool)
         color_vect_gp = vertcat(color_vect_gp, color_vect_check(iiij,:));
     end
 
+    which_div_check = [];
+    cat_gp_check = [];
     color_vect_gp_edited = [];
     vertcat_gp_edited = [];
+    which_div_check = vertcat(which_div_check, ones(size(store_index)));
+    cat_gp_check = vertcat(cat_gp_check, vertcat_gp(store_index));
+    which_div_check = vertcat(which_div_check, zeros(size(non_divide)));
+    cat_gp_check = vertcat(cat_gp_check, vertcat_gp(non_divide));
     vertcat_gp_edited = vertcat(vertcat_gp_edited, vertcat_gp(store_index)/2);
     vertcat_gp_edited = vertcat(vertcat_gp_edited, vertcat_gp(store_index)/2);
     vertcat_gp_edited = vertcat(vertcat_gp_edited, vertcat_gp(non_divide));
