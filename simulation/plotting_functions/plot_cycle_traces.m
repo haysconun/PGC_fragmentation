@@ -2,8 +2,25 @@ function [div_counter, store_index, which_above, which_osc_ind_vect, gp_vect, ex
     plot_cycle_traces(cell_output_NC_9_10_11_gp,color_vect,...
     t_val,y_val, plot_at_end, pct_cutoff, assert_check_bool)
 
-% div_counter, store_index, which_above, which_osc_ind_vect, gp_vect, extra_div_counter
-% cell_output_NC_9_10_11_gp,color_vect, t_val,y_val, plot_at_end, pct_cutoff, assert_check_bool
+%% OUTPUTS:
+% div_counter: count number of PGCs that divide once after NC 11
+% store_index: store index for dividing PGCs
+% which_above: stores which oscillators above threshold at NC 11
+% which_osc_ind_vect: stores indices for clones that generate at least one PGC
+% gp_vect: distribution of germ plasm per PGC at NC 14
+% extra_div_counter: count number of PGCs that divide twice after NC 11
+
+%% INPUTS:
+% cell_output_NC_9_10_11_gp: cell array for storing germ plasm amount over lineages
+% color_vect: store vector of colors -- for visualization purposes
+% t_val: time points in simulation output
+% y_val: phases and inhibitor concentrations (see odefun_cell_cycle_oscillotile)
+% plot_at_end: should I plot at end? If running many realizations at once,
+%   set to false.
+% pct_cutoff: if the daughter of a bud has more than this percentage of
+%   germ plasm at NC11, cellularize.
+% assert_check_bool: if wild-type germ plasm amount, then check that at max
+%   one division per PGC; otherwise, count additional divisions
 
 color_vect = vertcat(color_vect, zeros(size(color_vect)));
 color_vect = vertcat(color_vect, zeros(size(color_vect)));
