@@ -64,3 +64,13 @@ The `.mat` files in the `examplelineage` directory are lineage forests that appe
 | --- | --- |
 | `examplelineage/wildtype` | Wild-type embryos |
 | `examplelineage/mutant` | 0.5x *oskar* embryos |
+
+| File | Figure |
+| --- | --- |
+| `cellularization_graph_02_14` | Fig. 1, 3A-A'', S3A-A'' |
+| `nuclear_graph_01_07` | Fig. 3B-B'', S3B-B'' |
+| `cellularization_graph_07_09_124552` | Fig. 7 |
+| `cellularization_graph_07_09_142109` | Fig. S7E |
+| `cellularization_graph_07_11` | Fig. S7D |
+| `cellularization_graph_03_26` | Fig. S1A-D |
+| `cellularization_graph_02_08` | Fig. S1E-H |
